@@ -31,6 +31,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Font = System.Drawing.Font;
 using MediaPortal.ExtensionMethods;
+using MediaPortal.Profile;
 
 
 namespace MediaPortal.Player.Subtitles
@@ -189,6 +190,7 @@ namespace MediaPortal.Player.Subtitles
     private IDVBSubtitleSource _subFilter = null;
     private long _subCounter = 0;
     private const int MAX_SUBTITLES_IN_QUEUE = 20;
+    private bool boxedttxtsubtitles = false;
 
     /// <summary>
     /// The coordinates of current vertex buffer
@@ -280,6 +282,10 @@ namespace MediaPortal.Player.Subtitles
         _useBitmap = false;
         _activeSubPage = option.entry.page;
         Log.Debug("SubtitleRender: Now rendering {0} teletext subtitle page {1}", option.language, _activeSubPage);
+        using (Settings xmlreader = new MPSettings())
+        {
+            boxedttxtsubtitles = xmlreader.GetValueAsBool("tvservice", "dvbboxedttxtsubtitles", false);
+        }
       }
       else if (option.type == SubtitleType.Bitmap)
       {
@@ -512,7 +518,7 @@ namespace MediaPortal.Player.Subtitles
         Subtitle subtitle = new Subtitle();
 
         // TODO - RenderText should directly draw to a D3D texture
-        subtitle.subBitmap = RenderText(sub.lc);
+        subtitle.subBitmap = RenderText(sub.lc, boxedttxtsubtitles);
         subtitle.timeOut = sub.timeOut;
         subtitle.presentTime = sub.timeStamp / 90000.0f + _startPos;
 
@@ -573,7 +579,7 @@ namespace MediaPortal.Player.Subtitles
       }
     }
 
-    public static Bitmap RenderText(LineContent[] lc)
+    public static Bitmap RenderText(LineContent[] lc, bool boxedttxtsubtitles)
     {
       int w = 720;
       int h = 576;
@@ -592,16 +598,29 @@ namespace MediaPortal.Player.Subtitles
               using (Font fnt = new Font("Courier", (lc[i].doubleHeight ? 22 : 15), FontStyle.Bold))
                 // fixed width font!
               {
-                int vertOffset = (h / lc.Length) * i;
+                  if (lc[i].line.Trim() != "") 
+                  {
+                    int vertOffset = (h / lc.Length) * i;
 
-                SizeF size = gBmp.MeasureString(lc[i].line, fnt);
-                //gBmp.FillRectangle(new SolidBrush(Color.Pink), new Rectangle(0, 0, w, h));
-                int horzOffset = (int)((w - size.Width) / 2); // center based on actual text width
-                gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF(horzOffset + 1, vertOffset + 0));
-                gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF(horzOffset + 0, vertOffset + 1));
-                gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF(horzOffset - 1, vertOffset + 0));
-                gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF(horzOffset + 0, vertOffset - 1));
-                gBmp.DrawString(lc[i].line, fnt, brush, new PointF(horzOffset, vertOffset));
+                    SizeF size = gBmp.MeasureString(lc[i].line, fnt);
+                    //gBmp.FillRectangle(new SolidBrush(Color.Pink), new Rectangle(0, 0, w, h));
+                    int horzOffset = 0;
+                    if (boxedttxtsubtitles)
+                    {
+                        horzOffset = (int)((w - gBmp.MeasureString("This line is exactly 40 characters long.", fnt).Width) / 2);
+                        int boxwidth = (int)gBmp.MeasureString(lc[i].line.Trim(), fnt).Width;
+                        gBmp.FillRectangle(new SolidBrush(Color.FromArgb(80, Color.Black)), size.Width - boxwidth + horzOffset, vertOffset, boxwidth, size.Height);
+                    }
+                    else
+                    {
+                        horzOffset = (int)((w - size.Width) / 2); // center based on actual text width
+                    }
+                    gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF (horzOffset + 1, vertOffset + 0));
+                    gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF(horzOffset + 0, vertOffset + 1));
+                    gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF(horzOffset - 1, vertOffset + 0));
+                    gBmp.DrawString(lc[i].line, fnt, blackBrush, new PointF(horzOffset + 0, vertOffset - 1));
+                    gBmp.DrawString(lc[i].line, fnt, brush, new PointF(horzOffset, vertOffset));
+                }
               }
             }
           }

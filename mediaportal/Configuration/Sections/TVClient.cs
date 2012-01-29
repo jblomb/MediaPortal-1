@@ -113,6 +113,7 @@ namespace MediaPortal.Configuration.Sections
                                             };
 
     private MPCheckBox cbContinuousScrollGuide;
+    private MPCheckBox mpCheckBoxBoxedTTXTSub;
 
     private bool _SingleSeat;
 
@@ -143,6 +144,7 @@ namespace MediaPortal.Configuration.Sections
 
         mpCheckBoxEnableDVBSub.Checked = xmlreader.GetValueAsBool("tvservice", "dvbbitmapsubtitles", false);
         mpCheckBoxEnableTTXTSub.Checked = xmlreader.GetValueAsBool("tvservice", "dvbttxtsubtitles", false);
+        mpCheckBoxBoxedTTXTSub.Checked = xmlreader.GetValueAsBool("tvservice", "dvbboxedttxtsubtitles", false);
         enableAudioDualMonoModes.Checked = xmlreader.GetValueAsBool("tvservice", "audiodualmono", false);
         cbHideAllChannels.Checked = xmlreader.GetValueAsBool("mytv", "hideAllChannelsGroup", false);
         cbShowChannelStateIcons.Checked = xmlreader.GetValueAsBool("mytv", "showChannelStateIcons", true);
@@ -318,6 +320,7 @@ namespace MediaPortal.Configuration.Sections
 
         xmlwriter.SetValueAsBool("tvservice", "dvbbitmapsubtitles", mpCheckBoxEnableDVBSub.Checked);
         xmlwriter.SetValueAsBool("tvservice", "dvbttxtsubtitles", mpCheckBoxEnableTTXTSub.Checked);
+        xmlwriter.SetValueAsBool("tvservice", "dvbboxedttxtsubtitles", mpCheckBoxBoxedTTXTSub.Checked);
         xmlwriter.SetValueAsBool("tvservice", "audiodualmono", enableAudioDualMonoModes.Checked);
         xmlwriter.SetValueAsBool("mytv", "hideAllChannelsGroup", cbHideAllChannels.Checked);
         xmlwriter.SetValueAsBool("myradio", "hideAllChannelsGroup", cbHideAllChannels.Checked);
@@ -427,6 +430,7 @@ namespace MediaPortal.Configuration.Sections
       this.checkBoxNotifyPlaySound = new MediaPortal.UserInterface.Controls.MPCheckBox();
       this.mpLabel2 = new MediaPortal.UserInterface.Controls.MPLabel();
       this.txtNotifyBefore = new MediaPortal.UserInterface.Controls.MPTextBox();
+      this.mpCheckBoxBoxedTTXTSub = new MediaPortal.UserInterface.Controls.MPCheckBox();
       this.mpGroupBox2.SuspendLayout();
       this.mpGroupBox1.SuspendLayout();
       this.tabControlTVGeneral.SuspendLayout();
@@ -948,11 +952,12 @@ namespace MediaPortal.Configuration.Sections
       // mpGroupBox4
       // 
       this.mpGroupBox4.Controls.Add(this.mpCheckBoxEnableTTXTSub);
+      this.mpGroupBox4.Controls.Add(this.mpCheckBoxBoxedTTXTSub);
       this.mpGroupBox4.Controls.Add(this.mpCheckBoxEnableDVBSub);
       this.mpGroupBox4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
       this.mpGroupBox4.Location = new System.Drawing.Point(16, 308);
       this.mpGroupBox4.Name = "mpGroupBox4";
-      this.mpGroupBox4.Size = new System.Drawing.Size(432, 60);
+      this.mpGroupBox4.Size = new System.Drawing.Size(432, 105);
       this.mpGroupBox4.TabIndex = 10;
       this.mpGroupBox4.TabStop = false;
       this.mpGroupBox4.Text = "Subtitle settings";
@@ -961,7 +966,7 @@ namespace MediaPortal.Configuration.Sections
       // 
       this.mpCheckBoxEnableTTXTSub.AutoSize = true;
       this.mpCheckBoxEnableTTXTSub.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-      this.mpCheckBoxEnableTTXTSub.Location = new System.Drawing.Point(239, 28);
+      this.mpCheckBoxEnableTTXTSub.Location = new System.Drawing.Point(203, 19);
       this.mpCheckBoxEnableTTXTSub.Name = "mpCheckBoxEnableTTXTSub";
       this.mpCheckBoxEnableTTXTSub.Size = new System.Drawing.Size(135, 17);
       this.mpCheckBoxEnableTTXTSub.TabIndex = 11;
@@ -973,7 +978,7 @@ namespace MediaPortal.Configuration.Sections
       // 
       this.mpCheckBoxEnableDVBSub.AutoSize = true;
       this.mpCheckBoxEnableDVBSub.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-      this.mpCheckBoxEnableDVBSub.Location = new System.Drawing.Point(9, 28);
+      this.mpCheckBoxEnableDVBSub.Location = new System.Drawing.Point(9, 19);
       this.mpCheckBoxEnableDVBSub.Name = "mpCheckBoxEnableDVBSub";
       this.mpCheckBoxEnableDVBSub.Size = new System.Drawing.Size(123, 17);
       this.mpCheckBoxEnableDVBSub.TabIndex = 7;
@@ -1235,6 +1240,17 @@ namespace MediaPortal.Configuration.Sections
       this.txtNotifyBefore.Size = new System.Drawing.Size(229, 20);
       this.txtNotifyBefore.TabIndex = 7;
       this.txtNotifyBefore.Text = "300";
+      // 
+      // mpCheckBoxBoxedTTXTSub
+      // 
+      this.mpCheckBoxBoxedTTXTSub.AutoSize = true;
+      this.mpCheckBoxBoxedTTXTSub.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+      this.mpCheckBoxBoxedTTXTSub.Location = new System.Drawing.Point(203, 42);
+      this.mpCheckBoxBoxedTTXTSub.Name = "mpCheckBoxBoxedTTXTSub";
+      this.mpCheckBoxBoxedTTXTSub.Size = new System.Drawing.Size(132, 17);
+      this.mpCheckBoxBoxedTTXTSub.TabIndex = 12;
+      this.mpCheckBoxBoxedTTXTSub.Text = "Boxed teletext subtitles";
+      this.mpCheckBoxBoxedTTXTSub.UseVisualStyleBackColor = false;
       // 
       // TVClient
       // 
